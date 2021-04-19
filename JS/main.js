@@ -1,10 +1,21 @@
 window.addEventListener('DOMCContentLoaded',()=>{
-    const jsonElement = document.getElementById('data');
-    const data = JSON.parse(jsonElement.textContent);
+    /*const request = new XMLHttpRequest();
+    request.open('GET','../JSON/db.json');
+    request.setRequestHeader('Content-type','application/json; charset=utf-8');
+    request.send();
+    if (request.readyState === 4 && request.status === 200) {
+            data = JSON.parse(request.response);
+    }*/
+    let data;
+    fetch('../JSON/db.json', {mode: 'no-cors'})
+        .then(response => response.json())
+        .then(_data => data = _data)
+        .catch(error => console.error(error));
     let menuSeasons = document.querySelector('.menuSeason');
     let menuEpisodes = document.querySelector('.menuEpisodes');
+    let episodeText = document.querySelector('.episodeText');
     function getStrings(s,e){
-        return data.season[s].episode[e];
+        return data.seasons[s].episodes[e];
     }
     function getString(value){
         if (value){
@@ -19,15 +30,17 @@ window.addEventListener('DOMCContentLoaded',()=>{
         let data = getStrings(s,e);
         data.forEach((value)=>{
             HTML += getString(value)
-        })
+        });
+        return HTML;
     }
 
     function switchSeason(s){
-        let value = data.season[s].length;
+        let value = data.seasons[s];
         let menuStr = ``;
         value.forEach((i)=>{
-            menuStr += `<div>${i.epiode.number}</div>`;
+            menuStr += `<div class="episode_number">${i.number}</div>`;
         })
+        menuEpisodes.innerHTML = menuStr;
     }
 
     menuSeasons.addEventListener('click',(event)=>{
@@ -35,12 +48,12 @@ window.addEventListener('DOMCContentLoaded',()=>{
             switchSeason(event.target.value);
         }
     });
+
     menuEpisodes.addEventListener('click',(event)=>{
         if (event.target && event.target.tagName ==='BUTTON'){
-            buildHTML(document.querySelector('.season-active'),event.target.value)
+            episodeText.innerHTML = buildHTML(document.querySelector('.season-active'),event.target.value);
         }
     });
-
 })
 
 
