@@ -38,7 +38,7 @@ window.addEventListener('DOMCContentLoaded',()=>{
         let value = data.seasons[s];
         let menuStr = ``;
         value.forEach((i)=>{
-            menuStr += `<div class="episode_number">${i.number}</div>`;
+            menuStr += `<span class="episode_number">${i.number}</span>`;
         })
         menuEpisodes.innerHTML = menuStr;
     }
